@@ -1,5 +1,5 @@
-module "cast_ai" {
-  source = "./cast_ai/"
+module "castai" {
+  source = "./castai/"
 }
 
 module "aws" {
@@ -7,7 +7,5 @@ module "aws" {
 }
 
 module "digitalocean" {
-  source   = "./digital_ocean/"
-  do_token = var.do_token
-  pvt_key  = var.pvt_key
+  source   = "./digitalocean/"
 }

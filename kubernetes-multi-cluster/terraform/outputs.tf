@@ -6,6 +6,11 @@ output "aws_kubeconfig-ca" {
   value = module.aws.kubeconfig-certificate-authority-data
 }
 
-output "cast_ai_kubeconfig" {
-  value = module.cast_ai.syntropy_kubeconfig
+output "castai_kubeconfig" {
+  value = module.castai.syntropy_kubeconfig
 }
+
+output "digitalocean_kubeconfig" {
+  value = module.digitalocean.syntropy_kubeconfig
+}
+
