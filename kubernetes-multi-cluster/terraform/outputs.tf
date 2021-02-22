@@ -1,5 +1,5 @@
 output "aws_eks_endpoint" {
-  value = module.aws.endpoint
+  value = module.aws.eks_endpoint
 }
 
 output "aws_kubeconfig-ca" {

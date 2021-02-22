@@ -6,14 +6,14 @@ resource "aws_vpc" "syntropy" {
 
 resource "aws_subnet" "syntropy-public" {
   vpc_id     = aws_vpc.syntropy.id
-  cidr_block = cidrsubnet(aws_vpc.default.cidr_block, 8, count.index)
+  cidr_block = cidrsubnet(aws_vpc.syntropy.cidr_block, 8, count.index)
   availability_zone = data.aws_availability_zones.available.names[count.index]
   count = 1
 }
 
 resource "aws_subnet" "syntropy-private" {
   vpc_id     = aws_vpc.syntropy.id
-  cidr_block = cidrsubnet(aws_vpc.default.cidr_block, 8, count.index+3)
+  cidr_block = cidrsubnet(aws_vpc.syntropy.cidr_block, 8, count.index+3)
   availability_zone = data.aws_availability_zones.available.names[count.index]
   count = 2
   tags = {
@@ -26,7 +26,7 @@ resource "aws_eip" "syntropy-nat-gateway" {
 }
 
 resource "aws_nat_gateway" "syntropy" {
-  allocation_id = aws_eip.syntopy-nat-gateway.id
+  allocation_id = aws_eip.syntropy-nat-gateway.id
   subnet_id     = aws_subnet.syntropy-public.0.id
 }
 
@@ -35,13 +35,13 @@ resource "aws_internet_gateway" "syntropy" {
 }
 
 resource "aws_default_security_group" "syntropy-default" {
-  vpc_id = aws_vpc.syntopy.id
+  vpc_id = aws_vpc.syntropy.id
 
   ingress {
     protocol    = -1
     from_port   = 0
     to_port     = 0
-    cidr_blocks = [aws_vpc.syntopy.cidr_block]
+    cidr_blocks = [aws_vpc.syntropy.cidr_block]
   }
 
   egress {
@@ -60,7 +60,7 @@ resource "aws_default_route_table" "syntropy-public" {
   }
 }
 
-resource "aws_default_route_table" "syntropy-private" {
+resource "aws_route_table" "syntropy-private" {
   vpc_id = aws_vpc.syntropy.id
   route {
     cidr_block = "0.0.0.0/0"
@@ -70,15 +70,15 @@ resource "aws_default_route_table" "syntropy-private" {
 
 resource "aws_route_table_association" "syntropy-public-0" {
   subnet_id      = aws_subnet.syntropy-public.0.id
-  route_table_id = aws_route_table.bar.id
+  route_table_id = aws_default_route_table.syntropy-public.id
 }
 
 resource "aws_route_table_association" "syntropy-private-0" {
   subnet_id      = aws_subnet.syntropy-private.0.id
-  route_table_id = aws_route_table.bar.id
+  route_table_id = aws_route_table.syntropy-private.id
 }
 
 resource "aws_route_table_association" "syntropy-private-1" {
   subnet_id      = aws_subnet.syntropy-private.1.id
-  route_table_id = aws_route_table.bar.id
+  route_table_id = aws_route_table.syntropy-private.id
 }

@@ -9,11 +9,8 @@ This example describes how to use the **Syntropy Stack** to create a private IPF
 # Requirements
 
 - **Syntropy Stack** account and an active Agent Token
-- Programatic access to 3 differnet cloud providers, see note below.
-- All services must run in Docker containers as pods in a kubernetes cluster
-- Terraform >= v0.14.0
-
-While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, GCP, and Digital Ocean.
+- Terraform >= v0.14.6
+- Programatic access to 3 differnet cloud providers. While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, Digital Ocean, and AWS.
 
 # Prepare the Syntropy Stack
 

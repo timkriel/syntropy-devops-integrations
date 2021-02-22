@@ -1,7 +1,7 @@
-variable "castai_token" {
+variable "castai_token" {}
 
-}
+variable "do_token" {}
 
-variable "do_token" {
-    
-}
+variable "aws_access_key" {}
+
+variable "aws_secret_key" {}
