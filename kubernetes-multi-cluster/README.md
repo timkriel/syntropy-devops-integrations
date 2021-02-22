@@ -10,7 +10,7 @@ This example describes how to use the **Syntropy Stack** to create a private IPF
 
 - **Syntropy Stack** account and an active Agent Token
 - Terraform >= v0.14.6
-- Programatic access to 3 differnet cloud providers. While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, Digital Ocean, and AWS.
+- Programatic access to 3 differnet cloud providers. While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, Digital Ocean, and AWS.cd ../
 
 # Prepare the Syntropy Stack
 
