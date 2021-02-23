@@ -1,0 +1,10 @@
+# AWS
+aws_access_key = "" # <==== AWS Access Key goes here
+aws_secret_key = "" # <==== AWS Secret Key goes here
+
+
+# Digital Ocean
+do_token = "" # <==== Digital Ocean Personal Access Token goes here
+
+# Cast.ai
+castai_token = "" # <==== Cast.ai API Access Key goes here

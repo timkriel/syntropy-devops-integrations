@@ -2,7 +2,7 @@
 <img src="images/header.jpg">
 </p>
 
-This example describes how to use the **Syntropy Stack** to create a private IPFS swarm network with 16 nodes. Terraform is used to create the cloud infrastructure across three separate cloud providers. Three nodes will be used to bootstrap the swarm network by adding lists of peers. Ansible is used to provision the Virtual Machines (VMs) by installing the required dependencies, to deploy the applications, create the Syntropy Network , and to create the connections between the Nodes.
+This example describes how to use the **Syntropy Stack** to create a multi-cloud, private Kubernetes network. Terraform is used to create the cloud infrastructure across three separate cloud providers. Three kubernetes clusters will have Syntropy agents running inside of pods (docker containers) with only egress and no ports exposed to the internet. These syntropy nodes will form the inter-cluster network and manage the routing between services running in separate clusters.
 
 ![system](images/system_diagram.png)
 
@@ -10,7 +10,66 @@ This example describes how to use the **Syntropy Stack** to create a private IPF
 
 - **Syntropy Stack** account and an active Agent Token
 - Terraform >= v0.14.6
-- Programatic access to 3 differnet cloud providers. While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, Digital Ocean, and AWS.cd ../
+- Programatic access to 3 differnet cloud providers. While you can use any cloud providers you wish, the terraform workflow in this example focuses on Cast.ai, Digital Ocean, and AWS.
+
+# Prepare your Cloud Provider Accounts
+For this example you will need to have created an account with each provider, and have set up a user with api keys. Once you have your API keys you can either rename the terraform.tfvars.example file to terraform.tfvars and add the keys into the file or populate the appropriate environment variables, see below.
+
+**AWS**
+Create your access key and secret key in Amazon Web Services, follow the guide [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey). Configure the terraform.tfvars or set the environmental variable.
+```
+export AWS_ACCESS_KEY_ID="aws_access_key"
+export AWS_SECRET_ACCESS_KEY="aws_secret_key"
+```
+The terraform template n this example assumes an AWS region of "us-east-2" and will create a new VPC rather than re-using the default VPC.
+
+**Cast.ai**
+Set up your API key. Additional info can be found in the docs, [here](https://docs.cast.ai/api/authentication/). Configure the terraform.tfvars or set the environmental variable.
+```
+export CASTAI_API_TOKEN="castai_api_key"
+```
+The terraform template  assumes you have set up your cloud credentials through the console and in this example is pointing to credentials named "Free trial GCP credentials".
+
+**Digital Ocean**
+Set up your Personal Access Token. Additional info can be found in the docs, [here](https://www.digitalocean.com/docs/apis-clis/api/create-personal-access-token/). Configure the terraform.tfvars or set the environmental variable.
+```
+export DIGITALOCEAN_ACCESS_TOKEN="digitalocean_personal_access_token"
+```
+
+# Deploy the Kubernetes Clusters
+
+Navigate to the `terraform/` directory and initialize the Terraform working directory. This will download the required provider modules etc.
+
+```
+terraform init
+```
+
+Create the execution plan.
+
+```
+terraform plan
+```
+
+Inspect the generated plan and, if everything looks satisfactory, apply the changes. You'll be asked to enter a value of `yes` to execute the plan.
+
+```
+terraform apply
+```
+
+Login to your various cloud provider consoles to confirm your clusters are running. If you run into any problems with any of the above steps, you can change the log level for Terraform to receive more information using:
+
+```
+export TF_LOG=1
+```
+
+<!-- Terraform generates your Ansible inventory automagically using the `infrastructure/ansible_inventory.tmpl` file and places it at `ansible/inventory`. Inspect the file to confirm each of your `[digitalocean]`, `[gcp]`, and `[aws]` groups contain configuration for its five hosts. -->
+
+
+
+
+
+
+
 
 # Prepare the Syntropy Stack
 
@@ -73,67 +132,6 @@ Install the Python dependencies.
 ```
 pip3 install -U -r requirements.txt
 ```
-
-# Terraform setup
-
-In order for Terraform to authenticate for your cloud providers, you will need to enable programmatic access to each.
-
-First, rename `infrastructure/terraform.tfvars.example` to `infrastructure/terraform.tfvars`. All references to variables in this section can be found in this file.
-
-**Digital Ocean**
-
-- A personal access token set to the `do_token` variable.
-- The location of your SSH private key set to `pvt_key`
-
-**AWS**
-
-- An IAM user for programmatic access with Administrator priviliges (do not use this for production, you should restrict the scope of any production IAM user's access). Add the credentials to your `~/.aws/credentials` file.
-
-Eg.
-
-```
-[syntropy]
-aws_access_key_id="your_access_key_here"
-aws_secret_access_key="your_secret_access_key_here"
-```
-
-- Set the `ssh_public_key` variable to the location of your SSH public key.
-- Give the key-pair a name and set `ec2_keypair_name` (this is what it will appear as in AWS)
-
-**GCP**
-
-- Create a project via the GCP console and set the project ID as the `app_project` variable.
-- Create a service account ( `APIs & Services > Credentials` ) and download JSON credentials. Place these in the `/auth` directory and set the `gcp_auth_file` variable using the path to your credentials file.
-- Enable the Compute Engine API
-- Enable the Resource Manager API
-
-# Create the hosting infrastructure
-
-Navigate to the `infrastructure/` directory and initialize the Terraform working directory. This will download the required provider modules etc.
-
-```
-terraform init
-```
-
-Create the execution plan.
-
-```
-terraform plan
-```
-
-Inspect the generated plan and, if everything looks satisfactory, apply the changes. You'll be asked to enter a value of `yes` to execute the plan.
-
-```
-terraform apply
-```
-
-Login to your various cloud provider consoles to confirm your VMs are running. If you run into any problems with any of the above steps, you can change the log level for Terraform to receive more information using:
-
-```
-export TF_LOG=1
-```
-
-Terraform generates your Ansible inventory automagically using the `infrastructure/ansible_inventory.tmpl` file and places it at `ansible/inventory`. Inspect the file to confirm each of your `[digitalocean]`, `[gcp]`, and `[aws]` groups contain configuration for its five hosts.
 
 # Prepare the Nginx proxy for the gateway
 
