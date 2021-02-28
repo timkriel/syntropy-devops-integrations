@@ -10,7 +10,11 @@ output "castai_kubeconfig" {
   value = module.castai.syntropy_kubeconfig
 }
 
+resource "local_file" "castai_kubeconfig" {
+    content  = module.castai.syntropy_kubeconfig
+    filename = "castai_kubeconfig"
+}
+
 output "digitalocean_kubeconfig" {
   value = module.digitalocean.syntropy_kubeconfig
 }
-

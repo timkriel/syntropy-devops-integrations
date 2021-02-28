@@ -12,3 +12,4 @@ node_modules/
 # Terraform
 .terraform*
 terraform.tfvars
+terraform.tfstate*
