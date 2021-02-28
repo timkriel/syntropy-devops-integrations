@@ -1,3 +1,3 @@
 provider "kubernetes" {
-  config_path    = "castai_kubeconfig"
+  config_path    = "castai/kubernetes/kubeconfig"
 }

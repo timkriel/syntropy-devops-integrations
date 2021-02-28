@@ -12,7 +12,7 @@ output "castai_kubeconfig" {
 
 resource "local_file" "castai_kubeconfig" {
     content  = module.castai.syntropy_kubeconfig
-    filename = "castai_kubeconfig"
+    filename = "castai/kubernetes/kubeconfig"
 }
 
 output "digitalocean_kubeconfig" {
